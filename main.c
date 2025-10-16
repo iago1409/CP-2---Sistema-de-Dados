@@ -36,7 +36,7 @@ void Task1 (void *pv)
         robustez2_t *var = (robustez2_t *) malloc(sizeof(robustez2_t));
         if(var == NULL)
         {
-            printf("[iago carvalho-RM88329] Não foi possível alocar dinamicamente\n");
+            printf("[iago carvalho - RM88329] Não foi possível alocar dinamicamente\n");
             vTaskDelay(pdMS_TO_TICKS(1000));
             continue;
         }
@@ -46,14 +46,14 @@ void Task1 (void *pv)
  
         if(xQueueSend(fila, &var, 0) != pdTRUE)
         {
-            printf("[iago carvalho-RM88329] Valor não enviado\n");
+            printf("[iago carvalho - RM88329] Valor não enviado\n");
             free(var);
         }
         else
         {
             // sinalizar para task 3 que a task 1 está operacional
             xEventGroupSetBits(event_supervisor, BIT_TASK1_OK);
-            printf("[iago carvalho-RM88329] Valor %d de ID %d enviado com sucesso\n", var->random_number, var->id);
+            printf("[iago carvalho - RM88329] Valor %d de ID %d enviado com sucesso\n", var->random_number, var->id);
         }
  
         esp_task_wdt_reset();
@@ -69,7 +69,7 @@ void Task2(void *pv)
     {
         if(xQueueReceive(fila, &pointer, 0) == pdTRUE)
         {
-            printf("[iago carvalho-RM88329] Valor %d de ID %d recebido com sucesso\n", pointer->random_number, pointer->id);
+            printf("[iago carvalho - RM88329] Valor %d de ID %d recebido com sucesso\n", pointer->random_number, pointer->id);
  
             timeout = 0;
             // reseta WDT
@@ -87,21 +87,21 @@ void Task2(void *pv)
         else
         {
             timeout++;
-            printf("[iago carvalho-RM88329] Não foi possível receber valor\n");
+            printf("[iago carvalho - RM88329] Não foi possível receber valor\n");
         }
  
         if(timeout == 5)
         {
-            printf("[iago carvalho-RM88329] Não foi possível receber valor da fila\n");
+            printf("[iago carvalho - RM88329] Não foi possível receber valor da fila\n");
         }
         else if(timeout == 10)
         {
-            printf("[iago carvalho-RM88329] Recuperação moderada - Limpa fila\n");
+            printf("[iago carvalho - RM88329] Recuperação moderada - Limpa fila\n");
             xQueueReset(fila);
         }
         else if (timeout == 15)
         {
-            printf("[iago carvalho-RM88329] Recuperação agressiva - Resetar o sistema\n");
+            printf("[iago carvalho - RM88329] Recuperação agressiva - Resetar o sistema\n");
             vTaskDelay(pdMS_TO_TICKS(1000));
             esp_restart();
         }
@@ -125,19 +125,19 @@ void Task3 (void *pv)
  
         if((bits & BIT_TASK1_OK) && (bits & BIT_TASK2_OK))
         {
-            printf("[iago carvalho-RM88329] Sistema OK (Task1 e Task2 ativas)\n");
+            printf("[iago carvalho - RM88329] Sistema OK (Task1 e Task2 ativas)\n");
         }
         else if(bits & BIT_TASK1_OK)
         {
-            printf("[iago carvalho-RM88329] Sistema parcialmente OK (apenas Task1)\n");
+            printf("[iago carvalho - RM88329] Sistema parcialmente OK (apenas Task1)\n");
         }
         else if(bits & BIT_TASK2_OK)
         {
-            printf("[iago carvalho-RM88329] Sistema parcialmente OK (apenas Task2)\n");
+            printf("[iago carvalho - RM88329] Sistema parcialmente OK (apenas Task2)\n");
         }
         else
         {
-            printf("[iago carvalho-RM88329] Sistema com falha (nenhuma task sinalizou)\n");
+            printf("[iago carvalho - RM88329] Sistema com falha (nenhuma task sinalizou)\n");
         }
         flag = 0;
  
@@ -163,7 +163,7 @@ void app_main(void)
  
     if(fila == NULL || event_supervisor == NULL)
     {
-        printf("[iago carvalho-RM88329] Falha na criação da fila ou do event group\n");
+        printf("[iago carvalho - RM88329] Falha na criação da fila ou do event group\n");
         esp_restart();
     }
  
@@ -181,5 +181,6 @@ void app_main(void)
  
 
  
+
 
 
